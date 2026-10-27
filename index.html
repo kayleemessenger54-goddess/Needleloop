@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NeedLoop — Ask for what you need</title>
+<style>
+:root{--ink:#25233a;--muted:#6c6a7b;--purple:#6854d9;--lav:#f0edff;--peach:#fff0e6;--line:#e9e6f1;--white:#fff;--bg:#faf9fd;--green:#26795c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.nav{max-width:1080px;margin:auto;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:850;font-size:1.25rem;letter-spacing:-.04em}.logo{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:var(--purple);color:white;font-size:20px}
+button,.btn{border:0;border-radius:12px;background:var(--purple);color:#fff;font-weight:750;padding:12px 16px;cursor:pointer;font-size:.95rem;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+button:hover,.btn:hover{filter:brightness(.96)}button.secondary{background:var(--lav);color:var(--purple)}button.small{padding:9px 12px;font-size:.85rem}
+main{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+.hero{background:linear-gradient(125deg,#eeeaff 0%,#fff5ed 100%);border-radius:26px;padding:34px;display:grid;grid-template-columns:1.3fr .7fr;gap:24px;align-items:center;overflow:hidden}
+.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;color:var(--purple)}
+h1{font-size:clamp(2.1rem,5vw,3.6rem);line-height:1.02;letter-spacing:-.06em;margin:12px 0 15px;max-width:620px}
+.hero p{font-size:1.08rem;color:#57536b;line-height:1.6;max-width:590px;margin:0 0 22px}
+.hero-art{background:#fff;border:1px solid #fff;border-radius:24px;padding:20px;box-shadow:0 18px 45px #453a7c12;transform:rotate(2deg)}
+.bubble{padding:13px 14px;border-radius:15px;margin:9px 0;font-size:.91rem;line-height:1.4}.bubble.need{background:var(--lav)}.bubble.offer{background:#eaf8f1;margin-left:23px}.bubble strong{display:block;font-size:.75rem;margin-bottom:4px;color:var(--purple)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:32px 0 15px}.section-head h2{margin:0;font-size:1.5rem;letter-spacing:-.04em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:.92rem}
+.controls{display:grid;grid-template-columns:1fr 190px;gap:10px;margin-bottom:16px}
+input,select,textarea{width:100%;padding:12px 13px;border:1px solid #ddd8ea;border-radius:12px;background:#fff;font:inherit;color:var(--ink);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #6854d91c}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;min-height:230px;box-shadow:0 5px 20px #30205005}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}.tag{font-size:.74rem;background:var(--lav);color:var(--purple);font-weight:800;padding:6px 9px;border-radius:999px}.budget{font-weight:850;font-size:.9rem;white-space:nowrap}
+.card h3{margin:15px 0 7px;font-size:1.1rem;letter-spacing:-.025em}.card p{color:var(--muted);font-size:.9rem;line-height:1.5;margin:0 0 16px}.meta{font-size:.8rem;color:var(--muted);margin-top:auto;margin-bottom:13px;display:flex;gap:8px;flex-wrap:wrap}
+.empty{grid-column:1/-1;background:#fff;border:1px dashed #d8d2e8;border-radius:18px;padding:30px;text-align:center;color:var(--muted)}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}.step .num{width:34px;height:34px;border-radius:11px;background:var(--peach);display:grid;place-items:center;font-weight:850;color:#9d5527}.step h3{margin:12px 0 6px}.step p{margin:0;color:var(--muted);line-height:1.5;font-size:.9rem}
+footer{margin-top:34px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:.82rem;line-height:1.6}
+dialog{border:0;border-radius:22px;padding:0;width:min(560px,calc(100% - 28px));box-shadow:0 25px 100px #1d173e40}dialog::backdrop{background:#1c173b70}.modal{padding:24px}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.modal-head h2{margin:0;letter-spacing:-.04em}.close{background:#f1eff7;color:var(--ink);padding:8px 11px}.field{margin:13px 0}.field label{display:block;font-weight:750;font-size:.86rem;margin-bottom:6px}.field small{display:block;color:var(--muted);margin-top:5px}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.notice{display:none;background:#eaf8f1;color:#1b654b;padding:12px 14px;border-radius:12px;margin:0 0 14px;font-size:.9rem}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding:25px}.hero-art{max-width:420px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.how{grid-template-columns:1fr}.controls{grid-template-columns:1fr 145px}}
+@media(max-width:500px){main{padding:18px 13px 40px}.nav{padding:12px 13px}.brand{font-size:1.1rem}.nav button{padding:10px 12px;font-size:.83rem}.hero{border-radius:20px;padding:22px}.hero p{font-size:1rem}.cards{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.controls{grid-template-columns:1fr}.card{min-height:205px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="brand"><span class="logo">↻</span> NeedLoop</div><button id="openPost">＋ Post a need</button></div></header>
+<main>
+<section class="hero">
+  <div><div class="eyebrow">A different kind of marketplace</div><h1>Need something? Let the right people find you.</h1><p>Post what you're looking for, set your budget, and invite sellers or neighbors to come to you. Less scrolling. More useful matches.</p><button id="heroPost">Post your first need <span aria-hidden="true">→</span></button></div>
+  <div class="hero-art" aria-label="Example of a request and an offer"><div class="bubble need"><strong>YOU NEED</strong>“Looking for a toddler winter coat, size 3T.”</div><div class="bubble offer"><strong>A POSSIBLE MATCH</strong>“I have a gently used one for $8!”</div><div style="text-align:center;color:#77718c;font-size:.8rem;margin-top:12px">A simple idea. A more useful way to shop.</div></div>
+</section>
+<section>
+<div class="section-head"><div><h2>Needs people are posting</h2><p>Explore the demo or add a request of your own.</p></div><button class="secondary small" id="resetDemo">Reset demo</button></div>
+<div class="controls"><input id="search" type="search" placeholder="Search needs, items, or keywords…" aria-label="Search requests"><select id="category" aria-label="Filter by category"><option value="">All categories</option><option>Clothing & shoes</option><option>Home & furniture</option><option>Baby & kids</option><option>Electronics</option><option>Tools & outdoor</option><option>Other</option></select></div>
+<div id="notice" class="notice" role="status"></div><div class="cards" id="cards"></div>
+</section>
+<section><div class="section-head"><div><h2>How NeedLoop works</h2><p>Designed to keep the first step easy.</p></div></div><div class="how">
+<div class="step"><div class="num">1</div><h3>Say what you need</h3><p>Describe the item, your budget, and your general area. No complicated listing required.</p></div>
+<div class="step"><div class="num">2</div><h3>Get potential matches</h3><p>Sellers can look through requests and decide whether they have something that fits.</p></div>
+<div class="step"><div class="num">3</div><h3>Connect safely</h3><p>Discuss details and arrange a safe transaction. This demo doesn't send messages or process payments.</p></div>
+</div></section>
+<footer><strong>NeedLoop is an early prototype.</strong> Sample requests are fictional. Requests you add are saved only in this browser on this device; other visitors cannot see them yet. This demo does not have accounts, real messaging, identity verification, or payments. Meet in public, protect your personal information, and never send money before verifying an item.</footer>
+</main>
+<dialog id="postDialog"><form id="needForm" class="modal">
+<div class="modal-head"><h2>Post what you need</h2><button type="button" class="close" id="closeDialog" aria-label="Close">✕</button></div>
+<div class="field"><label for="title">What are you looking for? *</label><input id="title" name="title" maxlength="90" required placeholder="e.g., Women's winter boots size 8"></div>
+<div class="field"><label for="details">A few helpful details</label><textarea id="details" name="details" rows="3" maxlength="300" placeholder="Condition, color, size, or anything else that matters…"></textarea></div>
+<div class="field"><label for="formCategory">Category *</label><select id="formCategory" required><option value="">Choose a category</option><option>Clothing & shoes</option><option>Home & furniture</option><option>Baby & kids</option><option>Electronics</option><option>Tools & outdoor</option><option>Other</option></select></div>
+<div class="field"><label for="budget">Maximum budget (USD)</label><input id="budget" type="number" min="0" max="100000" step="1" placeholder="e.g., 20"></div>
+<div class="field"><label for="area">General area (optional)</label><input id="area" maxlength="60" placeholder="e.g., Danville, IL — not your street address"><small>For privacy, don't enter your home address or phone number.</small></div>
+<div class="form-actions"><button type="button" class="secondary" id="cancelDialog">Cancel</button><button type="submit">Publish demo request</button></div>
+</form></dialog>
+<script>
+const starter = [
+{id:"s1",title:"Toddler winter coat, size 3T",details:"Warm and gently used is perfect. Neutral or bright colors are both fine.",category:"Baby & kids",budget:10,area:"Danville, IL",sample:true},
+{id:"s2",title:"Women's boots, size 8",details:"Looking for black or brown boots in wearable condition.",category:"Clothing & shoes",budget:15,area:"Nearby",sample:true},
+{id:"s3",title:"Small kitchen table",details:"A compact table for a small kitchen. Chairs would be a bonus.",category:"Home & furniture",budget:40,area:"Local pickup",sample:true},
+{id:"s4",title:"Kids' books and beginner readers",details:"Looking for a bundle of books for early readers.",category:"Baby & kids",budget:12,area:"Nearby",sample:true},
+{id:"s5",title:"Cordless drill for home projects",details:"Used is okay if it works and holds a charge.",category:"Tools & outdoor",budget:25,area:"Local pickup",sample:true},
+{id:"s6",title:"Unlocked basic smartphone",details:"Doesn't need to be fancy—just reliable and in working condition.",category:"Electronics",budget:50,area:"Nearby",sample:true}
+];
+const KEY="needloop_demo_requests_v1";
+let userItems=loadItems();
+function loadItems(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return []}}
+function saveItems(){try{localStorage.setItem(KEY,JSON.stringify(userItems));return true}catch(e){return false}}
+const cards=document.getElementById("cards"), search=document.getElementById("search"), category=document.getElementById("category"), dialog=document.getElementById("postDialog"), notice=document.getElementById("notice");
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function render(){
+ const q=search.value.trim().toLowerCase(), cat=category.value;
+ const all=[...userItems,...starter].filter(x=>(!cat||x.category===cat)&&(!q||[x.title,x.details,x.category,x.area].join(" ").toLowerCase().includes(q)));
+ cards.innerHTML="";
+ if(!all.length){cards.innerHTML='<div class="empty"><strong>No requests found.</strong><br>Try another search or post the first request in this category.</div>';return}
+ all.forEach(item=>{
+  const card=document.createElement("article");card.className="card";
+  const amount=item.budget!==""&&item.budget!==null&&item.budget!==undefined?`Up to $${Number(item.budget).toLocaleString()}`:"Budget flexible";
+  card.innerHTML=`<div class="card-top"><span class="tag">${escapeHTML(item.category)}</span><span class="budget">${amount}</span></div><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.details||"No extra details provided yet.")}</p><div class="meta"><span>⌖ ${escapeHTML(item.area||"Area not specified")}</span>${item.sample?'<span>· Demo example</span>':'<span>· Your demo post</span>'}</div><button class="secondary small" type="button" data-id="${escapeHTML(item.id)}">I may have this</button>`;
+  card.querySelector("button").addEventListener("click",()=>{showNotice("This is a visual demo: matching and messaging aren't connected yet. Your next version can let sellers send real offers.");});
+  cards.appendChild(card);
+ });
+}
+function showNotice(msg){notice.textContent=msg;notice.style.display="block";notice.scrollIntoView({behavior:"smooth",block:"nearest"});setTimeout(()=>{notice.style.display="none"},6500)}
+function openDialog(){dialog.showModal()}
+document.getElementById("openPost").addEventListener("click",openDialog);
+document.getElementById("heroPost").addEventListener("click",openDialog);
+document.getElementById("closeDialog").addEventListener("click",()=>dialog.close());
+document.getElementById("cancelDialog").addEventListener("click",()=>dialog.close());
+search.addEventListener("input",render);category.addEventListener("change",render);
+document.getElementById("needForm").addEventListener("submit",e=>{
+ e.preventDefault();const title=document.getElementById("title").value.trim(),details=document.getElementById("details").value.trim(),cat=document.getElementById("formCategory").value,budget=document.getElementById("budget").value,area=document.getElementById("area").value.trim();
+ if(!title||!cat)return;
+ const item={id:"u"+Date.now(),title,details,category:cat,budget:budget===""?"":Number(budget),area,sample:false,createdAt:new Date().toISOString()};
+ userItems.unshift(item);const saved=saveItems();dialog.close();e.target.reset();search.value="";category.value="";render();
+ showNotice(saved?"Your request has been added to this browser's demo. It is not public yet.":"Your request is visible in this session, but browser storage wasn't available; it may disappear when you reload.");
+});
+document.getElementById("resetDemo").addEventListener("click",()=>{if(confirm("Remove your locally saved demo requests and restore the examples?")){userItems=[];try{localStorage.removeItem(KEY)}catch(e){}search.value="";category.value="";render();showNotice("Demo reset. Sample requests are back.");}});
+render();
+</script>
+</body>
+</html>
